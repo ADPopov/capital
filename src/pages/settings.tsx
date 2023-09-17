@@ -5,57 +5,72 @@ import Link from "next/link";
 import Button from "~/components/Button";
 
 export default function Settings() {
-
-    const dailyAmounts = calculateArithmeticProgression(1, 10, 365)
-
     function sum(arr: number[]): number {
         return arr.reduce((acc, curr) => acc + curr, 0)
     }
 
-    const monthlySavings = calculateMonthlySavings(dailyAmounts);
-    console.log(monthlySavings);
-    console.log(sum(dailyAmounts))
-
-    const [desiredAmount, setDesiredAmount] = useState("600000");
-    const [dailyIncrease, setDailyIncrease] = useState("20");
+    const [desiredAmount, setDesiredAmount] = useState("365");
+    const [dailyIncrease, setDailyIncrease] = useState("10");
     const [startAmount, setStartAmount] = useState("1");
 
-    return (
-        <main className={'flex items-center justify-center h-screen bg-gray-50'}>
-            <div className={'m-6'}>
-                <div className={"text-3xl text-gray-950 font-medium w-[300px] mb-14"}>
-                    Let&apos;s calculate your savings schedule
-                </div>
-                <div className={"flex flex-col gap-4"}>
-                    <QuestionField
-                        question={"How much do you want to save?"}
-                        value={desiredAmount}
-                        handleChange={(value) => setDesiredAmount(value)}
-                    />
-                    <QuestionField
-                        question={"How much should I increase each day?"}
-                        value={dailyIncrease}
-                        handleChange={(value) => {
-                            setDailyIncrease(value)
-                        }}
-                    />
-                    <QuestionField
-                        question={"How much will we start saving?"}
-                        value={startAmount}
-                        handleChange={(value) => {
-                            setStartAmount(value)
-                        }}
-                    />
-                </div>
+    const dailyAmounts = calculateArithmeticProgression(+startAmount, +dailyIncrease, +desiredAmount)
+    const monthlySavings = calculateMonthlySavings(dailyAmounts);
 
-                <div className={"flex justify-center mt-8"}>
-                    <Link href={'/calendar'}>
-                        <Button>
-                            Continue
-                        </Button>
-                    </Link>
+    console.log({
+        daily: dailyAmounts,
+        month: monthlySavings,
+        sum: sum(dailyAmounts)
+    })
+
+    return (
+        <main className={'bg-gray-50 h-screen'}>
+            <div className={'flex items-center justify-center'}>
+                <div className={'m-6'}>
+                    <div className={"text-3xl text-gray-950 font-medium w-[300px] mb-14"}>
+                        Let&apos;s calculate your savings schedule
+                    </div>
+                    <div className={"flex flex-col gap-4"}>
+                        <QuestionField
+                            question={"How many days do you plan to save?"}
+                            value={desiredAmount}
+                            handleChange={(value) => setDesiredAmount(value)}
+                        />
+                        <QuestionField
+                            question={"How much should I increase each day?"}
+                            value={dailyIncrease}
+                            handleChange={(value) => {
+                                setDailyIncrease(value)
+                            }}
+                        />
+                        <QuestionField
+                            question={"How much will we start saving?"}
+                            value={startAmount}
+                            handleChange={(value) => {
+                                setStartAmount(value)
+                            }}
+                        />
+                    </div>
+
+                    <div className={"flex justify-center mt-8"}>
+                        <Link href={'/calendar'}>
+                            <Button>
+                                Continue
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
             </div>
+
+            <div className={"flex flex-wrap"}>
+                {sum(dailyAmounts)}
+                {
+                    monthlySavings.map((item) => (<div key={item} className={'p-3 text-green-400'}>{item}</div>))
+                }
+                {
+                    dailyAmounts.map((item) => (<div key={item} className={'p-3'}>{item}</div>))
+                }
+            </div>
+
 
         </main>
     )
