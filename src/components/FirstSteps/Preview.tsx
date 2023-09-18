@@ -2,8 +2,16 @@ import Button from "~/components/Button";
 import {calculateArithmeticProgression} from "~/pages/calendar/utils";
 import {type QuestionsType} from "~/pages";
 import {toMoneyString} from "~/utils/format/string";
+import {api} from "~/utils/api";
 
-export default function Preview({nextStep, questions, prev}: { nextStep: () => void, questions: QuestionsType, prev: () => void }) {
+export default function Preview({questions, prev}: {
+    nextStep: () => void,
+    questions: QuestionsType,
+    prev: () => void
+}) {
+
+    const {mutate} = api.moneyBoxSettings.add.useMutation();
+
 
     const dailyAmounts = calculateArithmeticProgression(
         Number(questions.startAmount),
@@ -39,7 +47,13 @@ export default function Preview({nextStep, questions, prev}: { nextStep: () => v
                 </div>
 
                 <div className={"flex justify-center mt-8"}>
-                    <Button onClick={nextStep}>
+                    <Button onClick={() => {
+                        mutate({
+                            desiredAmount: +questions.desiredAmount,
+                            startAmount: +questions.desiredAmount,
+                            dailyIncrease: +questions.dailyIncrease
+                        })
+                    }}>
                         Start saving!
                     </Button>
                 </div>
