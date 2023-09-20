@@ -1,22 +1,27 @@
-import Button from "~/components/Button";
-import {calculateArithmeticProgression} from "~/pages/calendar/utils";
-import {type QuestionsType} from "~/pages";
-import {toMoneyString} from "~/utils/format/string";
-import {api} from "~/utils/api";
+'use client'
+import { useRouter } from "next/navigation";
 
-export default function Preview({questions, prev}: {
+import Button from "~/components/Button";
+import { type QuestionsType } from "~/pages";
+import { api } from "~/utils/api";
+import { toMoneyString } from "~/utils/formatters";
+import { calculateArithmeticProgression } from "~/utils/planCalculating";
+
+export default function Preview({ questions, prev }: {
     nextStep: () => void,
     questions: QuestionsType,
     prev: () => void
 }) {
+    const router = useRouter();
 
-    const {mutate} = api.moneyBoxSettings.add.useMutation();
+    const { mutateAsync } = api.savingPlan.create.useMutation();
+    const plan = api.savingPlan.findPlan.useQuery();
 
 
     const dailyAmounts = calculateArithmeticProgression(
-        Number(questions.startAmount),
+        Number(questions.initialAmount),
         Number(questions.dailyIncrease),
-        Number(questions.desiredAmount))
+        Number(questions.duration))
 
     function sum(arr: number[]): number {
         return arr.reduce((acc, curr) => acc + curr, 0)
@@ -24,6 +29,22 @@ export default function Preview({questions, prev}: {
 
     const total = toMoneyString(sum(dailyAmounts))
     const last = toMoneyString(dailyAmounts[dailyAmounts.length - 1] ?? 0)
+
+    const unSubmit = async () => {
+        try {
+            await mutateAsync({
+                duration: +questions.duration,
+                dailyIncrease: +questions.dailyIncrease,
+                initialAmount: +questions.initialAmount
+            })
+
+            await plan.refetch()
+
+            router.push('/')
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     return (
         <>
@@ -47,13 +68,7 @@ export default function Preview({questions, prev}: {
                 </div>
 
                 <div className={"flex justify-center mt-8"}>
-                    <Button onClick={() => {
-                        mutate({
-                            desiredAmount: +questions.desiredAmount,
-                            startAmount: +questions.desiredAmount,
-                            dailyIncrease: +questions.dailyIncrease
-                        })
-                    }}>
+                    <Button onClick={unSubmit}>
                         Start saving!
                     </Button>
                 </div>

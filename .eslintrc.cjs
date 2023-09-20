@@ -4,7 +4,7 @@ const config = {
   parserOptions: {
     project: true,
   },
-  plugins: ["@typescript-eslint"],
+  plugins: ["@typescript-eslint", "simple-import-sort"],
   extends: [
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended-type-checked",
@@ -24,6 +24,28 @@ const config = {
       },
     ],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
+      "@typescript-eslint/no-misused-promises": [2, {
+          "checksVoidReturn": {
+              "attributes": false
+          }
+      }],
+    "simple-import-sort/imports": ["error", {
+        "groups": [
+            // Packages `react` related packages come first.
+            ["^react", "^@?\\w"],
+            // Internal packages.
+            ["^(@|components)(/.*|$)"],
+            // Side effect imports.
+            ["^\\u0000"],
+            // Parent imports. Put `..` last.
+            ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+            // Other relative imports. Put same-folder imports and `.` last.
+            ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+            // Style imports.
+            ["^.+\\.?(css)$"]
+        ]
+    }],
+    "simple-import-sort/exports": "error"
   },
 };
 

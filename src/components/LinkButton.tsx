@@ -1,5 +1,6 @@
-import Link, {type LinkProps} from 'next/link';
+"use client"
 import React from 'react';
+import Link, { type LinkProps } from 'next/link';
 
 type LinkButtonProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & LinkProps
 

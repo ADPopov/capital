@@ -1,9 +1,9 @@
+'use client'
 import React from 'react';
+
 import Button from "~/components/Button";
 
-const Welcome = ({nextStep}: { nextStep: () => void }) => {
-
-
+const Welcome = ({ nextStep }: { nextStep: () => void }) => {
     return (
         <>
             <div className={'text-6xl text-gray-900 mb-5'}>

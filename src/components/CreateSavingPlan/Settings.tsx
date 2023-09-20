@@ -1,9 +1,11 @@
-import Input from "~/components/Input";
-import Button from "~/components/Button";
-import {type QuestionsType} from "~/pages";
-import {useState} from "react";
+"use client"
+import { useState } from "react";
 
-export default function Settings({nextStep, questions, handleQuestionsChange}: {
+import Button from "~/components/Button";
+import Input from "~/components/Input";
+import { type QuestionsType } from "~/pages";
+
+export default function Settings({ nextStep, questions, handleQuestionsChange }: {
     nextStep: () => void,
     questions: QuestionsType,
     handleQuestionsChange: (values: QuestionsType) => void
@@ -20,15 +22,15 @@ export default function Settings({nextStep, questions, handleQuestionsChange}: {
 
     return (
         <>
-            <div className={'m-6'}>
+            <div>
                 <div className={"text-3xl text-gray-950 font-medium w-[300px] mb-14"}>
                     Let&apos;s calculate your savings schedule
                 </div>
                 <div className={"flex flex-col gap-4"}>
                     <QuestionField
                         question={"How many days do you plan to save?"}
-                        value={question.desiredAmount}
-                        name={'desiredAmount'}
+                        value={question.duration}
+                        name={'duration'}
                         handleChange={handleChange}
                     />
                     <QuestionField
@@ -38,9 +40,9 @@ export default function Settings({nextStep, questions, handleQuestionsChange}: {
                         handleChange={handleChange}
                     />
                     <QuestionField
-                        question={"How much will we start saving?"}
-                        value={question.startAmount}
-                        name={'startAmount'}
+                        question={"What is your initial contribution?"}
+                        value={question.initialAmount}
+                        name={'initialAmount'}
                         handleChange={handleChange}
                     />
                 </div>
@@ -58,7 +60,7 @@ export default function Settings({nextStep, questions, handleQuestionsChange}: {
     )
 }
 
-function QuestionField({value, question, handleChange, name}: {
+function QuestionField({ value, question, handleChange, name }: {
     question: string,
     value: string,
     name: keyof QuestionsType,

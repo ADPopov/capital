@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 
 export function useCarousel(totalSteps: number) {
     const [currentStep, setCurrentStep] = useState(0);

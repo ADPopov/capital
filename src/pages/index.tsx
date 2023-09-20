@@ -1,12 +1,21 @@
 import Head from "next/head";
-import FirstSteps from "~/components/FirstSteps";
+import { useRouter } from "next/navigation";
+
+import { api } from "~/utils/api";
+
 export type QuestionsType = {
-    desiredAmount: string,
+    duration: string,
     dailyIncrease: string,
-    startAmount: string
+    initialAmount: string
 }
 
 export default function Home() {
+    const router = useRouter();
+    const plan = api.savingPlan.findPlan.useQuery();
+
+    if (plan && plan.data === 0) {
+        router.push("/plan/create");
+    }
 
     return (
         <>
@@ -16,7 +25,7 @@ export default function Home() {
                 <link rel="icon" href="/favicon.ico"/>
             </Head>
             <main>
-                <FirstSteps />
+                Hey
             </main>
 
         </>
